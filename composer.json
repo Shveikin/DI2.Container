@@ -12,5 +12,7 @@
             "email": "picus.2022@mail.ru"
         }
     ],
-    "require": {}
+    "require": {},
+    "license": "MIT",
+    "version": "1.0.0"
 }

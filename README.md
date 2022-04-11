@@ -2,9 +2,6 @@
 
 
 `
-	require '../vendor/autoload.php';
-	use DI2\Container;
-
 	class Test {
 		use Container;
 

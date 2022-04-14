@@ -9,31 +9,62 @@ class MP {
     private $containers = [];
     private $reg = [];
 
-    static function GET($class = false, $alias = false){
+    static function GET(...$props){
         if (self::$container==false)
             self::$container = new self();
 
+        $class = isset($props['class'])?$props['class']:(isset($props[0])?$props[0]:false);
+        $alias = isset($props['alias'])?$props['alias']:(isset($props[1])?$props[1]:false);
+        $constructor = isset($props['constructor'])?$props['constructor']:(isset($props[2])?$props[2]:false);
+
         if ($class!=false){
-            return self::$container->class($class, $alias);
+            return self::$container->class($class, $alias, (array)$constructor);
         }
 
         return self::$container;
     }
 
-    function class($class, $alias = false){
+    function autoprops($class, $alias, &$constructor):array {
+        $parameters = (new \ReflectionClass($class))->getConstructor()->getParameters();
+                
+        $result = [];
+        $propsCounter = 0;
+        foreach ($parameters as $p){
+            if ($p->name=='super'){
+                $result[] = function($el) use ($alias){
+                    $this->containers[$alias] = $el;
+                };
+            } else {
+                if (isset($constructor[$p->name])){
+                    $result[] = $constructor[$p->name];
+                } else 
+                if (isset($constructor[$propsCounter])){
+                    $result[] = $constructor[$propsCounter];
+                } else {
+                    $result[] = false;
+                }
+
+                $propsCounter++;
+            }
+        }
+
+        return $result;
+    }
+
+    function class(string $class, string|bool $alias = false, array $constructor = []){
         if ($alias==false) $alias = $class;
 
         if (!isset($this->reg[$alias])){
             if (!isset($this->containers[$alias])){
                 $this->reg[$alias] = true;
+                
+                $tempElement = new $class(...$this->autoprops($class, $alias, $constructor));
 
-                $tempElement = new $class(function($el) use ($alias){
-                    $this->containers[$alias] = $el;
-                });
-
-                if (method_exists($tempElement, '__parent')){
-                    $tempElement->__parent();
+/* 
+                if (method_exists($tempElement, 'construct')){
+                    $tempElement->construct(...(array)$construct);
                 }
+*/
 
                 if (!isset($this->containers[$alias])){
                     $this->containers[$alias] = $tempElement;

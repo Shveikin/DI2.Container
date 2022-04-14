@@ -25,10 +25,11 @@ class MP {
     }
 
     function autoprops($class, $alias, &$constructor):array {
-        $parameters = (new \ReflectionClass($class))->getConstructor()->getParameters();
+        $parameters = (new \ReflectionClass($class))->getConstructor()?->getParameters();
                 
         $result = [];
         $propsCounter = 0;
+        if ($parameters)
         foreach ($parameters as $p){
             if ($p->name=='super'){
                 $result[] = function($el) use ($alias){

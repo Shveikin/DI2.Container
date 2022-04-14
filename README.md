@@ -1,10 +1,8 @@
 ## php di 2
 
+...
 
-`
-	require '../vendor/autoload.php';
-	use DI2\Container;
-
+```php
 	class Test {
 		use Container;
 

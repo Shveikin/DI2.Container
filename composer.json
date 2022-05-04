@@ -3,7 +3,8 @@
     "description": "DI2",
     "autoload": {
         "psr-4": {
-            "DI2\\": "src/"
+            "DI2\\": "src/",
+            "clases\\": "example/clases"
         }
     },
     "authors": [

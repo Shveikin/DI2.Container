@@ -1,31 +1,18 @@
 <?php
 
+use clases\Init;
+use DI2\Container;
+
 require '../vendor/autoload.php';
 
-use DI2\Container;
-use DI2\MP;
+class site {
+	use Init;
 
-class Test {
-	use Container;
-
-	private $alert = '';
-
-	function __construct($super, $alert, $hh) {
-		echo "alert: $alert, hh: $hh;\n";
-
-		$this->alert = $alert;
+	function next(){
+		echo $this->jsonFilter->print('HELLO');
 	}
 
-	private function print($text) {
-		echo "$this->alert: $text\n";
-	}
 }
 
 
-echo MP::GET(
-	class: Test::class, 
-	alias: 'HEROS', 
-	constructor: ['hh' => 'dss', 'alert' => 'method']
-)->print('hello world');
-
-echo Test::print('hello world');
+(new site())->next();

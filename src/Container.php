@@ -31,5 +31,4 @@ trait Container {
         throw new \Exception(get_class($this) . " method $func - отсутствует ");
     }
 
-
 }

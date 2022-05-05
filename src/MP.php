@@ -85,6 +85,10 @@ class MP {
                 if (!isset($this->containers[$alias])){
                     $this->containers[$alias] = $tempElement;
                 }
+
+                if (method_exists($tempElement, '__constructor')){
+                    $tempElement->__constructor();
+                }
             }
         } else {
             if (!isset($this->containers[$alias]))
